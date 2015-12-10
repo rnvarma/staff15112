@@ -34,3 +34,18 @@
   cursor: pointer;
   box-shadow: inset 0px 0px 10px 2px #000;
 }
+
+.main-content {
+  padding-top: 20px;
+}
+
+.fullscreen {
+  margin-left: -20px;
+  margin-right: -20px;
+}
+
+.fullscreen-iframe {
+  width: 100%;
+  height: 100%;
+
+}

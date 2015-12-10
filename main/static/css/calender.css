@@ -1,0 +1,310 @@
+
+html, body {
+  overflow: hidden;
+}
+
+.no-border {
+  border: none !important;
+}
+
+.top-header {
+  height: 50px;
+  background-color: #F5F5F5;
+  border: 1px black;
+  border-style: solid;
+  border-color: #b0b0b0;
+  border-width: thin;
+}
+
+.calender-header {
+  height: 51px;
+}
+
+.main-col.collapsed {
+  width: 99%;
+  margin-left: 15px;
+}
+
+.sidebar {
+  background-color: #F5F5F5;
+  border: 1px black;
+  border-style: solid;
+  border-color: #b0b0b0;
+  border-width: thin;
+}
+
+.search-input {
+  margin: 10px;
+  width: 62%;
+  margin-left: 32px;
+  border-radius: 27px;
+  height: 60%;
+  position: relative;
+  padding-left: 30px;
+}
+
+.search-icon {
+  font-size: 117%;
+  position: absolute;
+  top: 17px;
+  left: 42px;
+  color: #8E8E93;
+}
+
+.search-gear {
+  font-size: 196%;
+  position: absolute;
+  top: 13px;
+  color: #8E8E93;
+  right: 12px;
+}
+
+.search-gear:hover {
+  color: red;
+  cursor: pointer;
+}
+
+.left-header {
+  float: left;
+  height: 50px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 18px;
+  border-right-style: solid;
+  border-right-width: thin;
+  border-right-color: #b0b0b0;
+}
+
+.left-header:hover {
+  color: red;
+  cursor: pointer;
+}
+
+.right-header {
+  float: right;
+  border-left-style: solid;
+  border-left-width: thin;
+  border-left-color: #b0b0b0;
+  height: 50px;
+  text-align: center;
+  margin-right: 15px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 14px;
+  border: none;
+  background-color: #F5F5F5;
+  padding-top: 0;
+  height: 49px;
+  outline: 0;
+}
+
+.right-header:hover {
+  color: red;
+  cursor: pointer;
+}
+
+.username-button {
+  margin-right: 0 !important;
+}
+
+.today-button-div {
+  padding-top: 14px;
+}
+
+.sidebar-toggler.clicked {
+  moz-box-shadow: inset -1px -1px 9px 2px #888;
+  -webkit-box-shadow: inset -1px -1px 9px 2px #888;
+  box-shadow: inset -1px -1px 9px 2px #888;
+}
+
+.main-calender {
+  
+}
+
+.topcorner {
+  width: 70px;
+  height: 50px;
+  float: left;
+}
+
+.topdates {
+  height: 50px;
+  float: left;
+  border-bottom-style: solid;
+  border-bottom-width: thin;
+  border-bottom-color: #b0b0b0;
+}
+
+.caltop-date {
+  width: 14.28%;
+  float: left;
+  height: 50px;
+  text-align: center;
+  padding-top: 10px;
+  font-size: 110%;
+  color: #8E8E93;
+}
+
+.body-times {
+  float: left;
+  width: 70px;
+}
+
+.body-stuff {
+  float: left;
+}
+
+.body-calender {
+  overflow: auto;
+  width: 100%;
+}
+
+.hourtime {
+  text-align: end;
+  padding-right: 6px;
+  color: #8E8E93;
+}
+
+.hourbox {
+  border-bottom-style: solid;
+  border-bottom-width: thin;
+  border-bottom-color: #b0b0b0;
+  border-right-style: solid;
+  border-right-width: thin;
+  border-right-color: #b0b0b0;
+}
+
+.calender-event {
+  /*position: fixed;*/
+  background-color: #FE8484;
+  float: left;
+  border-left-style: solid;
+  border-left-width: medium;
+  border-left-color: #BA0000;
+  color: #BA0000;
+  padding: 8px;
+  font-size: 100%;
+}
+
+.calender-event:hover {
+  cursor: pointer;
+}
+
+.isToday {
+  font-weight: 800;
+  color: red;
+}
+
+.eventTimeText {
+  color: white;
+  font-size: 85%;
+  margin-top: 7px;
+}
+
+.clickedEvent {
+  border: none;
+  color: white !important;
+  background-color: red;
+}
+
+.suggestion-icon {
+  font-size: 300%;
+  margin-left: 29%;
+  color: white;
+  border-style: solid;
+  padding: 11px;
+  border-radius: 56px;
+  padding-left: 17px;
+}
+
+.NapThing {
+  background-color: #245084;
+  border: none !important;
+}
+.Excercise{
+  color: #991e1f;
+  border: none !important;
+  margin-top: -30px;
+}
+.Excercise-background {
+  border: none;
+  background-color: #f9627f;
+}
+
+.Caffeine{
+  margin-left: 0;
+  border: none !important;
+  color: #aa8651;
+  margin-top: -32px;
+}
+.Caffeine-background{
+  border: none !important;
+  background-color: #eab773;
+}
+.PowerNap{
+  margin-left: 50%;
+  border: none !important;
+  margin-top: -32px;
+  color: #2080ce;
+}
+.PowerNap-background{
+  border: none !important;
+  background-color: #92b2cc;
+}
+.Productivity{
+
+}
+.Relaxation{
+
+}
+
+.sidebar-button {
+  width: 90%;
+  margin-left: 8%;
+  margin-top: 10px;
+  outline: 0;
+}
+
+.selectable {
+  border-style: solid;
+}
+
+.selectable:hover {
+  cursor: pointer;
+  background-color: black;
+  color: white;
+}
+
+.sidebar-marker {
+  margin-left: 60px;
+  margin-top: 30px;
+}
+
+.sidebar-icon {
+  font-size: 200%;
+  margin-right: 45px;
+}
+
+.sidebar-text {
+  font-size: 124%;
+  font-weight: 800;
+}
+
+.shaded-region-loading {
+  position: absolute;
+  top: 0;
+  left:0;
+  width: 100%;
+  height: 100%;
+  background-color: #575757;
+  opacity: 0.4;
+  z-index: 2000;
+}
+
+.verticalcol {
+  float: left;
+  border-left-style: solid;
+  border-left-width: thin;
+  border-left-color: #e0e0e0;
+}
+
