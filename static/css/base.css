@@ -1,0 +1,36 @@
+
+.sidebar-brand {
+  background-color: #0F6BD2;
+}
+
+.sidebar-brand a {
+  color: white !important;
+  font-weight: 800;
+}
+
+#header {
+  height: 65px;
+  background-color: gray;
+  color: white;
+  margin-top: -20px;
+  margin-left: -20px;
+  margin-right: -20px;
+  line-height: 60px;
+}
+
+#menu-toggle {
+  width: 60px;
+  float: left;
+  font-size: 270%;
+  text-align: center;
+  height: 100%;
+  padding-top: 10px;
+  border-right-style: solid;
+  border-right-color: #777;
+  border-right-width: 2px;
+}
+
+#menu-toggle:hover {
+  cursor: pointer;
+  box-shadow: inset 0px 0px 10px 2px #000;
+}
