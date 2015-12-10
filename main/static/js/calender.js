@@ -381,6 +381,7 @@ $(document).ready(function() {
   resize_heights();
   click_handlers();
   load_days();
+  $(".body-calender").scrollTo(500);
 
   $( window ).resize(function() {
     resize_heights();
