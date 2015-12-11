@@ -53,6 +53,9 @@
               <div id="menu-toggle">
                 <span class="arrow glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
               </div>
+              <div class="left-header">
+                {{ user.first_name }} {{ user.last_name }}
+              </div>
             </div>
             <div class="fullscreen">
               {% block fullscreen %}{% endblock %}
@@ -77,6 +80,8 @@
           e.preventDefault();
           $("#wrapper").toggleClass("toggled");
           $(this).find(".arrow").toggleClass("glyphicon-chevron-left").toggleClass("glyphicon-chevron-right")
+          setTimeout(resize_heights, 1000);
+          
       });
     </script>
     {% block js %}{% endblock %}

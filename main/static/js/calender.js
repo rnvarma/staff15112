@@ -1,6 +1,6 @@
 WEEKDIFF = 0;
 
-HOURSIZE = 70;
+HOURSIZE = 50;
 CAL_SIZE = 24 * HOURSIZE;
 
 EVENTDICT = {};
@@ -86,7 +86,7 @@ function place_event(event) {
 }
 
 function resize_heights() {
-  var w_size = $(window).height();
+  var w_size = $(window).height() - 80;
   $(".sidebar").css("height", w_size - 50);
   $(".main-calender").css("height", w_size - 51);
 
@@ -95,7 +95,7 @@ function resize_heights() {
   $(".body-times").css("height", CAL_SIZE);
   $(".body-stuff").css("height", CAL_SIZE);
   $(".hourtime").css("height", HOURSIZE);
-  $(".hourtime").css("padding-top", 59);
+  $(".hourtime").css("padding-top", HOURSIZE - 11);
   $(".hourbox").css("height", HOURSIZE);
   $(".body-stuff").css("width", cal_w - 75);
   $(".body-calender").css("height", w_size - 100)
@@ -381,7 +381,7 @@ $(document).ready(function() {
   resize_heights();
   click_handlers();
   load_days();
-  $(".body-calender").scrollTo(500);
+  $(".body-calender").scrollTo(300);
 
   $( window ).resize(function() {
     resize_heights();

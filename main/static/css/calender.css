@@ -192,7 +192,8 @@ html, body {
 
 .isToday {
   font-weight: 800;
-  color: red;
+  color: white;
+  background-color: #0F6BD2;
 }
 
 .eventTimeText {

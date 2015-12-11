@@ -30,6 +30,13 @@
   border-right-width: 2px;
 }
 
+.left-header {
+  float: right;
+  font-weight: 100;
+  padding-right: 20px;
+  font-size: 150%;
+}
+
 #menu-toggle:hover {
   cursor: pointer;
   box-shadow: inset 0px 0px 10px 2px #000;

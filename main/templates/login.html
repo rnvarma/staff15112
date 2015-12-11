@@ -1,0 +1,35 @@
+<html>
+  {% load staticfiles %}
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}112 Staff - Login{% endblock %}</title>
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link href="{% static 'css/login.css' %}" rel="stylesheet">
+  </head>
+
+  <body>
+    <div class="row">
+      <div class="col-md-4 col-sm-6 col-xs-10 col-md-offset-4 col-sm-offset-3 col-xs-offset-1">
+        <div class="login-area">
+          <div class="panel panel-default">
+            <div class="panel-heading login-heading">
+              <h3 class="panel-title" style="text-align:center;">15-112 Course Staff</h3>
+            </div>
+            <div class="panel-body">
+              <form action="/login/google-oauth2" method="get" class="">
+                {% csrf_token %}
+                <button type="submit" style="width:100%;" class="btn btn-default">Login through Andrew</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="{% static 'js/jquery.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  </body>
+
+</html>

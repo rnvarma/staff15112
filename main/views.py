@@ -19,3 +19,6 @@ class CalendarView(View):
   def get(self, request):
     return render(request, 'calendar.html')
 
+class LoginView(View):
+  def get(self, request):
+    return render(request, 'login.html')
