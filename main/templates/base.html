@@ -6,6 +6,8 @@
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
     <link href="{% static 'css/simple-sidebar.css' %}" rel="stylesheet">
+    <link href="{% static 'css/datepicker.css' %}" rel="stylesheet">
+    <link href="{% static 'css/timepicker.min.css' %}" rel="stylesheet">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link href="{% static 'css/base.css' %}" rel="stylesheet">
     {% block css %}{% endblock %} 
@@ -43,6 +45,48 @@
                 <li>
                     <a href="/piazza">Piazza</a>
                 </li>
+                <div class="edit-event">
+                  <div class="center-text" style="font-size:125%;">Edit Event</div>
+                  <div class="edit-event-area">
+                    <input placeholder="Event Name" id="edit-name" type="text">
+                  </div>
+                  <div class="edit-event-area">
+                    <input placeholder="Location" id="edit-location" type="text">
+                  </div>
+                  <div class="edit-event-area">
+                    <textarea placeholder="Description.." id="edit-description" type="text"></textarea>
+                  </div>
+                  <div class="edit-event-area">
+                    <input id="dp" class="span2" data-date-format="mm/dd/yyyy" data-date="12-12-2015" size="16" type="text" placeholder="Event Date" readonly="">
+                  </div>
+                  <div class="time-area">
+                    <span class="black-text">From</span> <input id="start-tp" placeholder="Start Time" type="text" class="input-small">
+                    <span class="black-text">To</span> <input id="end-tp" placeholder="End Time" type="text" class="input-small">
+                  </div>
+                  <div class="select-area">
+                    Type:
+                    <select id="event-type" class="select-item form-control">
+                      <option value="Office Hours">Office Hours</option>
+                      <option value="Small Group">Small Group</option>
+                      <option value="Review Session">Review Session</option>
+                      <option value="Grading">Grading</option>
+                      <option value="Meeting">Meeting</option>
+                      <option value="Recitation">Recitation</option>
+                      <option value="Staff Event">Staff Event</option>
+                      <option value="Misc">Misc</option>
+                    </select>
+                  </div>
+                  <div class="select-area">
+                    Reminder:
+                    <select id="reminder-time" class="select-item form-control">
+                      <option value="None">None</option>
+                      <option value="00:15">15 Minutes</option>
+                      <option value="00:30">30 Minutes</option>
+                      <option value="01:00">1 Hour</option>
+                      <option value="24:00">1 Day</option>
+                    </select>
+                  </div>
+                </div>
             </ul>
         </div>
         <!-- /#sidebar-wrapper -->
@@ -53,9 +97,12 @@
               <div id="menu-toggle">
                 <span class="arrow glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
               </div>
-              <div class="left-header">
+              <div class="leftnav-header">
                 {{ user.first_name }} {{ user.last_name }}
               </div>
+              <a href="/createevent"><div class="leftnav-header">
+                Create Event
+              </div></a>
             </div>
             <div class="fullscreen">
               {% block fullscreen %}{% endblock %}
@@ -75,14 +122,19 @@
     <script src="{% static 'js/jquery.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <script src="{% static 'js/jquery.scrollTo.min.js' %}"></script>
+    <script src="{% static 'js/datepicker.js' %}"></script>
+    <script src="{% static 'js/timepicker.min.js' %}"></script>
     <script>
       $("#menu-toggle").click(function(e) {
           e.preventDefault();
           $("#wrapper").toggleClass("toggled");
           $(this).find(".arrow").toggleClass("glyphicon-chevron-left").toggleClass("glyphicon-chevron-right")
           setTimeout(resize_heights, 1000);
-          
       });
+
+      $("#dp").datepicker();
+      $("#start-tp").timepicker({template:false, showInputs:false, minuteStep: 15});
+      $("#end-tp").timepicker({template:false, showInputs:false, minuteStep: 15});
     </script>
     {% block js %}{% endblock %}
   </body>

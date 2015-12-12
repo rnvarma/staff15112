@@ -16,13 +16,15 @@ class Event(models.Model):
   start_date = models.DateTimeField(blank=True, null=True)
   end_date = models.DateTimeField(blank=True, null=True)
   event_type = models.CharField(max_length=100)
+  volunteers_needed = models.BooleanField(default=False)
+  num_volunteers_needed = models.IntegerField(default=0)
 
 class CAdata(models.Model):
   user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name="cadata")
   name = models.CharField(max_length=50)
   andrewID = models.CharField(max_length=50)
   isCA = models.BooleanField(default=False)
-  recitation = models.ForeignKey(Recitation, related_name="leaders")
+  recitation = models.ForeignKey(Recitation, null=True, blank=True, related_name="leaders")
   events = models.ManyToManyField(Event, related_name="attendees")
   office_hours = models.ManyToManyField(OfficeHour, related_name="cas")
   num_semesters = models.IntegerField(default=0)

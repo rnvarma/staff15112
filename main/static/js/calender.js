@@ -13,6 +13,10 @@ IMG_DICT = {
   "Relaxation": "fa fa-thumbs-up"
 }
 
+function print(x) {
+  console.log(x);
+}
+
 function load_spinner() {
   var opts = {
     lines: 13, // The number of lines to draw
@@ -53,13 +57,48 @@ function get_icon_div(name) {
   return icon;
 }
 
+function getTime(h, m) {
+  if (h < 12) ampm = "AM";
+  else ampm = "PM";
+  if (m == 0) {
+    return h + " " + ampm;
+  } else {
+    return h + ":" + m + " " + ampm;
+  }
+}
+
+function get_date_data(date) {
+  var data = {}
+  data["month"] = date.month() + 1;
+  data["date"] = date.date();
+  data["year"] = date.year();
+  data["scaledT"] = date.hour() + (date.minutes()/60);
+  data["time"] = getTime(date.hour(), date.minutes());
+  data["full"] = date.clone();
+  return data
+}
+
+function get_new_event(date) {
+  var e = {};
+  e["name"] = "New Event";
+  e["start_date"] = get_date_data(date)
+  date.add(1, 'hours')
+  e["end_date"] = get_date_data(date)
+  return e;
+}
+
+// an event needs
+// - start_date (month, date, year, scaledT, time, full)
+// - end_date   (month, date, year, scaledT, time, full)
+// - name
+
 function place_event(event) {
   var day = moment(event.start_date.month + "/" + event.start_date.date + "/" + event.start_date.year).day();
   var eventdiv = $(document.createElement("div"));
-  var top = -(CAL_SIZE - event.start_date.scaledT * HOURSIZE) + 2;
+  var top = -(CAL_SIZE - event.start_date.scaledT * HOURSIZE);
   var left = day * $(".caltop-date").width();
   var width = $(".caltop-date").width();
-  var height = (event.end_date.scaledT - event.start_date.scaledT) * HOURSIZE - 4;
+  var height = (event.end_date.scaledT - event.start_date.scaledT) * HOURSIZE;
   eventdiv.addClass("calender-event");
   eventdiv.css("width", width);
   eventdiv.css("height", height);
@@ -106,6 +145,9 @@ function resize_heights() {
   $(".verticalcol").each(function(i) {
     $(this).css("margin-left", col_width * i);
   })
+  var date = get_short_date(get_x_days_away(WEEKDIFF * 7));
+  $(".calender-event").remove();
+  place_event_list(EVENTDICT[date]);
 }
 
 function getCookie(name) {
@@ -124,54 +166,7 @@ function getCookie(name) {
   return cookieValue;
 }
 
-function allNighterClickHandler($elem) {
-  var post_data = {}
-  var text = $elem.text().split(" ")[1];
-  var date = text.split("/");
-  post_data.month = parseInt(date[0])
-  post_data.day = parseInt(date[1])
-  post_data.year = parseInt($elem.attr("data-year"));
-  post_data.username = $(".username-button").text();
-  var csrftoken = getCookie('csrftoken');
-  $.ajax({
-    type: 'POST',
-    data: JSON.stringify(post_data),
-    url: "/1/setallnighter",
-    contentType: 'application/json',
-    beforeSend: function (xhr) {
-        xhr.withCredentials = true;
-        xhr.setRequestHeader("X-CSRFToken", csrftoken);
-    },
-    success: function (data) {
-      console.log(data);
-      window.location.href = "/"
-    },
-    error: function(a , b, c){
-      console.log("there was an error setting an all nighter");
-    },
-    async: true
-  });
-  $(".selectable").removeClass("selectable");
-  $(".allnighter-button").prop("disabled", true);
-}
-
 function click_handlers() {
-  $(".sidebar-toggler").click(function() {
-    if ($(this).hasClass("clicked")) {
-      $(this).removeClass("clicked");
-      $(".sidebar-col").hide();
-      $(".main-col").removeClass("col-md-10").removeClass("col-sm-9").addClass("col-md-12").addClass("collapsed");
-    } else {
-      $(this).addClass("clicked");
-      $(".sidebar-col").show();
-      $(".main-col").addClass("col-md-10").addClass("col-sm-9").removeClass("col-md-12").removeClass("collapsed");
-    }
-    resize_heights();
-    var date = get_short_date(get_x_days_away(WEEKDIFF * 7));
-    $(".calender-event").remove();
-    place_event_list(EVENTDICT[date]);
-  });
-
   $(".prev-week-button").click(function() {
     var sunday = new Date();
     WEEKDIFF -= 1
@@ -197,16 +192,42 @@ function click_handlers() {
     place_event_list(EVENTDICT[get_short_date(get_nearest_prev_sunday())]);
   });
 
-  $(".calender-event").click(function() {
+  $(".body-stuff").dblclick(function(e) {
+    var offset = $(this).offset();
+    var x = (e.pageX - offset.left);
+    var y = (e.pageY - offset.top);
+    var col_width = $(".caltop-date").width()
+    var day = Math.floor(x / col_width)
+    var hour = Math.floor(y / HOURSIZE);
+    var minute = Math.floor(((y % HOURSIZE) / HOURSIZE) * 60)
+    var nearest_30 = Math.floor(minute / 30) * 30
+    var date = get_x_days_away(WEEKDIFF * 7)
+    date.add(day, 'days');
+    date.hour(hour);
+    date.minute(nearest_30);
+    var new_event = get_new_event(date);
+    process_events([new_event]);
+    place_event(new_event);
+  });
+
+  $(".body-stuff").click(function() {
     $(".clickedEvent").removeClass("clickedEvent");
-    $(this).addClass("clickedEvent");
-  });
+  })
 
-  $(".allnighter-button").click(function() {
-    $(".caltop-date").toggleClass("selectable");
+  $(".body-stuff").on("click", ".calender-event", function(e) {
+    e.stopPropagation();
+    if ($("#wrapper").hasClass("toggled")) {
+      $("#wrapper").removeClass("toggled");
+      $("#menu-toggle").find(".arrow").addClass("glyphicon-chevron-left").removeClass("glyphicon-chevron-right")
+      setTimeout(function() {
+        resize_heights();
+        clicked.addClass("clickedEvent");
+      }, 1000);
+    } else {
+      $(".clickedEvent").removeClass("clickedEvent");
+      $(this).addClass("clickedEvent");
+    }
   });
-
-  $(".caltop-date.selectable").click();
 
   $(window).click(function(e) {
     if (e.target.id.slice(0,7) == "topdate") {
@@ -216,51 +237,6 @@ function click_handlers() {
       }
     };
   });
-
-  $(".mood-button").click(function() {
-    var username = $(".username-button").text();
-    $.ajax({
-      type: 'GET',
-      url: '/1/mood?username=' + username,
-      contentType: 'application/json',
-      success: function (data) {
-        window.location.href = "/"
-      },
-      error: function(a , b, c){
-      },
-      async: true
-    });
-    load_spinner();
-  });
-
-  $(".weekplan-button").click(function() {
-    post_data = {};
-    var sunday = get_x_days_away(WEEKDIFF * 7)
-    post_data.month = sunday.month() + 1
-    post_data.day = sunday.date()
-    post_data.year = sunday.year()
-    post_data.username = $(".username-button").text();
-    var csrftoken = getCookie('csrftoken');
-    $.ajax({
-      type: 'POST',
-      data: JSON.stringify(post_data),
-      url: "/1/regular",
-      contentType: 'application/json',
-      beforeSend: function (xhr) {
-          xhr.withCredentials = true;
-          xhr.setRequestHeader("X-CSRFToken", csrftoken);
-      },
-      success: function (data) {
-        console.log(data);
-        window.location.href = "/"
-      },
-      error: function(a , b, c){
-        console.log("there was an error setting an all nighter");
-      },
-      async: true
-    });
-    load_spinner();
-  })
 }
 
 function get_short_date(sunday) {
@@ -351,6 +327,7 @@ function process_events(raw_events) {
 }
 
 function place_event_list(event_list) {
+  if (!event_list) return;
   for (var i = 0; i < event_list.length; i++) {
     place_event(event_list[i])
   }
@@ -377,7 +354,7 @@ function get_backend_events() {
 }
 
 $(document).ready(function() {
-  get_backend_events()
+  // get_backend_events()
   resize_heights();
   click_handlers();
   load_days();

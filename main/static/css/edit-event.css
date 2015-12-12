@@ -1,0 +1,64 @@
+.edit-event {
+  margin-top: 50px;
+  background-color: gray;
+  padding: 10px;
+  font-weight: 800;
+}
+
+.edit-event-area {
+  width: 100%;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  color: white;
+  font-weight: 800;
+}
+
+.time-area {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  color: white;
+  font-weight: 800;
+}
+
+.select-area {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.time-area input {
+  width: 30%;
+  background-color: transparent;
+  border: none;
+  border-bottom: solid thin black;
+}
+
+.time-area input[type="text"]:focus,
+.time-area input[type="text"].focus {
+  border-bottom: solid thin #0F6BD2;
+}
+
+.edit-event-area input,textarea {
+  width: 100%;
+}
+
+.edit-event-area input[type="text"],textarea {
+  border: none;
+  border-bottom: solid thin black;
+  transition: border 0.3s;
+  background-color: transparent;
+}
+.edit-event-area input[type="text"]:focus,
+.edit-event-area input[type="text"].focus,
+.edit-event-area textarea[type="text"]:focus {
+  border-bottom: solid thin #0F6BD2;
+}
+
+.select-item {
+  width: 75%;
+  height: inherit;
+  display: initial;
+}
+
+#reminder-time {
+  width: 61%;
+}

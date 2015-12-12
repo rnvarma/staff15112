@@ -9,4 +9,5 @@ urlpatterns = [
     url(r'^piazza$', PiazzaView.as_view()),
     url(r'^calendar$', CalendarView.as_view()),
     url(r'^login$', LoginView.as_view()),
+    url(r'^createevent$', CreateEventView.as_view()),
 ]
