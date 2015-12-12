@@ -57,15 +57,15 @@
                     <textarea placeholder="Description.." id="edit-description" type="text"></textarea>
                   </div>
                   <div class="edit-event-area">
-                    <input id="dp" class="span2" data-date-format="mm/dd/yyyy" data-date="12-12-2015" size="16" type="text" placeholder="Event Date" readonly="">
+                    <input id="edit-date" class="span2" data-date-format="mm/dd/yyyy" data-date="12-12-2015" size="16" type="text" placeholder="Event Date" readonly="">
                   </div>
                   <div class="time-area">
-                    <span class="black-text">From</span> <input id="start-tp" placeholder="Start Time" type="text" class="input-small">
-                    <span class="black-text">To</span> <input id="end-tp" placeholder="End Time" type="text" class="input-small">
+                    <span class="black-text">From</span> <input id="edit-start-time" placeholder="Start Time" type="text" class="input-small">
+                    <span class="black-text">To</span> <input id="edit-end-time" placeholder="End Time" type="text" class="input-small">
                   </div>
                   <div class="select-area">
                     Type:
-                    <select id="event-type" class="select-item form-control">
+                    <select id="edit-event-type" class="select-item form-control">
                       <option value="Office Hours">Office Hours</option>
                       <option value="Small Group">Small Group</option>
                       <option value="Review Session">Review Session</option>
@@ -78,7 +78,7 @@
                   </div>
                   <div class="select-area">
                     Reminder:
-                    <select id="reminder-time" class="select-item form-control">
+                    <select id="edit-reminder-time" class="select-item form-control">
                       <option value="None">None</option>
                       <option value="00:15">15 Minutes</option>
                       <option value="00:30">30 Minutes</option>
@@ -86,6 +86,21 @@
                       <option value="24:00">1 Day</option>
                     </select>
                   </div>
+                  <div class="select-area">
+                    Repeat:
+                    <select id="edit-repeat-interval" class="select-item form-control">
+                      <option value="None">None</option>
+                      <option value="weekly">Every Week</option>
+                    </select>
+                  </div>
+                  <div class="edit-event-area">
+                    <input id="edit-end-repeat" class="span2" data-date-format="mm/dd/yyyy" data-date="12-12-2015" size="16" type="text" placeholder="Repeat End Date" readonly="">
+                  </div>
+                  <div class="volunteer-area">
+                    Volunteers:
+                    <input placeholder="0, 1, 2, etc.." id="edit-num-volunteers" type="number">
+                  </div>
+                  <button style="margin-top: 10px;" id="edit-event-button" class="form-control btn btn-primary">Save</button>
                 </div>
             </ul>
         </div>
@@ -132,9 +147,10 @@
           setTimeout(resize_heights, 1000);
       });
 
-      $("#dp").datepicker();
-      $("#start-tp").timepicker({template:false, showInputs:false, minuteStep: 15});
-      $("#end-tp").timepicker({template:false, showInputs:false, minuteStep: 15});
+      $("#edit-date").datepicker();
+      $("#edit-end-repeat").datepicker();
+      $("#edit-start-time").timepicker({template:false, showInputs:false, minuteStep: 15});
+      $("#edit-end-time").timepicker({template:false, showInputs:false, minuteStep: 15});
     </script>
     {% block js %}{% endblock %}
   </body>

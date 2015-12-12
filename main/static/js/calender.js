@@ -229,6 +229,23 @@ function click_handlers() {
     }
   });
 
+  $("#edit-event-button").click(function() {
+    var data = {
+      "name": $("#edit-name").val(),
+      "location": $("#edit-location").val(),
+      "description": $("#edit-description").val(),
+      "date": $("#edit-date").val(),
+      "start_time": $("#edit-start-time").val(),
+      "end_time": $("#edit-end-time").val(),
+      "event_type": $("#edit-event-type").val(),
+      "reminder_time": $("#edit-reminder-time").val(),
+      "repeat_interval": $("#edit-repeat-interval").val(),
+      "end_repeat": $("#edit-end-repeat").val(),
+      "num_vols": $("#edit-num-volunteers").val(),
+    }
+    print(data);
+  })
+
   $(window).click(function(e) {
     if (e.target.id.slice(0,7) == "topdate") {
       if (e.target.className == "caltop-date selectable") {

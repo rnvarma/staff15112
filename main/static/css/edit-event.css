@@ -54,11 +54,31 @@
 }
 
 .select-item {
-  width: 75%;
   height: inherit;
   display: initial;
 }
 
-#reminder-time {
-  width: 61%;
+#edit-reminder-time {
+  width: 68%;
+}
+
+#edit-event-type {
+  width: 82%;
+}
+
+#edit-repeat-interval {
+  width: 75%;
+}
+
+#edit-num-volunteers {
+  width: 65%;
+  background-color: transparent;
+  border: none;
+  border-bottom: solid thin black;
+  color: white;
+}
+
+.volunteer-area input:focus,
+.volunteer-area input.focus {
+  border-bottom: solid thin #0F6BD2;
 }
