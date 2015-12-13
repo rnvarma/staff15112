@@ -45,7 +45,7 @@
                 <li>
                     <a href="/piazza">Piazza</a>
                 </li>
-                <div class="edit-event">
+                <div class="edit-event" style="display:none;">
                   <div class="center-text" style="font-size:125%;">Edit Event</div>
                   <div class="edit-event-area">
                     <input placeholder="Event Name" id="edit-name" type="text">
@@ -139,6 +139,7 @@
     <script src="{% static 'js/jquery.scrollTo.min.js' %}"></script>
     <script src="{% static 'js/datepicker.js' %}"></script>
     <script src="{% static 'js/timepicker.min.js' %}"></script>
+    <script src="{% static 'js/base.js' %}"></script>
     <script>
       $("#menu-toggle").click(function(e) {
           e.preventDefault();

@@ -11,13 +11,15 @@ class OfficeHour(models.Model):
   time = models.DateTimeField(blank=True, null=True)
 
 class Event(models.Model):
+  creator = models.ForeignKey('CAdata', related_name="created_events", blank=True, null=True)
   name = models.CharField(max_length=100)
-  description = models.TextField()
+  description = models.TextField(default="")
   start_date = models.DateTimeField(blank=True, null=True)
   end_date = models.DateTimeField(blank=True, null=True)
   event_type = models.CharField(max_length=100)
   volunteers_needed = models.BooleanField(default=False)
   num_volunteers_needed = models.IntegerField(default=0)
+  location = models.CharField(max_length=200, default="")
 
 class CAdata(models.Model):
   user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name="cadata")

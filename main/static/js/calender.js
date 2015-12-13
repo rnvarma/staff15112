@@ -4,6 +4,7 @@ HOURSIZE = 50;
 CAL_SIZE = 24 * HOURSIZE;
 
 EVENTDICT = {};
+EVENTKEYS = {};
 
 IMG_DICT = {
   "Excercise": "fa fa-heartbeat",
@@ -91,6 +92,7 @@ function get_new_event(date) {
 // - start_date (month, date, year, scaledT, time, full)
 // - end_date   (month, date, year, scaledT, time, full)
 // - name
+// - id
 
 function place_event(event) {
   var day = moment(event.start_date.month + "/" + event.start_date.date + "/" + event.start_date.year).day();
@@ -104,6 +106,7 @@ function place_event(event) {
   eventdiv.css("height", height);
   eventdiv.css("margin-top", top);
   eventdiv.css("margin-left", left);
+  eventdiv.attr("data-id", event.id);
   if (event.is_suggestion) {
     icon_div = get_icon_div(event.name);
     eventdiv.append(icon_div);
@@ -150,6 +153,37 @@ function resize_heights() {
   place_event_list(EVENTDICT[date]);
 }
 
+function clear_edit_event() {
+  $("#edit-name").val("");
+  $("#edit-location").val("");
+  $("#edit-description").val("");
+  $("#edit-date").val("");
+  $("#edit-start-time").val("");
+  $("#edit-end-time").val("");
+  $("#edit-event-type").val("");
+  $("#edit-reminder-time").val("");
+  $("#edit-repeat-interval").val("");
+  $("#edit-end-repeat").val("");
+  $("#edit-num-volunteers").val("");
+}
+
+function load_edit_event(id) {
+  clear_edit_event()
+  var data = EVENTKEYS[id];
+  var date = data["start_date"]["month"] + "/" + data["start_date"]["date"] + "/" + data["start_date"]["year"];
+  $("#edit-name").val(data.name);
+  $("#edit-location").val(data.location);
+  $("#edit-description").val(data.description);
+  $("#edit-date").val(date);
+  $("#edit-start-time").val(data["start_date"]["time"]);
+  $("#edit-end-time").val(data["end_date"]["time"]);
+  $("#edit-event-type").val(data.event_type);
+  // $("#edit-reminder-time").val("");
+  // $("#edit-repeat-interval").val("");
+  // $("#edit-end-repeat").val("");
+  // $("#edit-num-volunteers").val("");
+}
+
 function getCookie(name) {
   var cookieValue = null;
   if (document.cookie && document.cookie != '') {
@@ -164,6 +198,25 @@ function getCookie(name) {
       }
   }
   return cookieValue;
+}
+
+function editEventClickHandler() {
+  $("#edit-event-button").click(function() {
+    var data = {
+      "name": $("#edit-name").val(),
+      "location": $("#edit-location").val(),
+      "description": $("#edit-description").val(),
+      "date": $("#edit-date").val(),
+      "start_time": $("#edit-start-time").val(),
+      "end_time": $("#edit-end-time").val(),
+      "event_type": $("#edit-event-type").val(),
+      "reminder_time": $("#edit-reminder-time").val(),
+      "repeat_interval": $("#edit-repeat-interval").val(),
+      "end_repeat": $("#edit-end-repeat").val(),
+      "num_vols": $("#edit-num-volunteers").val(),
+    }
+    print(data);
+  })
 }
 
 function click_handlers() {
@@ -206,13 +259,33 @@ function click_handlers() {
     date.hour(hour);
     date.minute(nearest_30);
     var new_event = get_new_event(date);
-    process_events([new_event]);
-    place_event(new_event);
+    var data = new_event;
+    var csrftoken = getCookie('csrftoken');
+    $.ajax({
+      type: 'POST',
+      url: '/1/addevent',
+      data: JSON.stringify(data),
+      beforeSend: function (xhr) {
+        xhr.withCredentials = true;
+        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+      },
+      success: function (event_data) {
+        console.log(event_data);
+        process_events([event_data]);
+        place_event(event_data);
+      },
+      error: function(a , b, c){
+      },
+      async: true
+    });
   });
 
   $(".body-stuff").click(function() {
     $(".clickedEvent").removeClass("clickedEvent");
+    $(".edit-event").hide();
   })
+
+  editEventClickHandler();
 
   $(".body-stuff").on("click", ".calender-event", function(e) {
     e.stopPropagation();
@@ -226,25 +299,11 @@ function click_handlers() {
     } else {
       $(".clickedEvent").removeClass("clickedEvent");
       $(this).addClass("clickedEvent");
+      var id = $(this).attr("data-id");
+      load_edit_event(id);
+      $(".edit-event").show();
     }
   });
-
-  $("#edit-event-button").click(function() {
-    var data = {
-      "name": $("#edit-name").val(),
-      "location": $("#edit-location").val(),
-      "description": $("#edit-description").val(),
-      "date": $("#edit-date").val(),
-      "start_time": $("#edit-start-time").val(),
-      "end_time": $("#edit-end-time").val(),
-      "event_type": $("#edit-event-type").val(),
-      "reminder_time": $("#edit-reminder-time").val(),
-      "repeat_interval": $("#edit-repeat-interval").val(),
-      "end_repeat": $("#edit-end-repeat").val(),
-      "num_vols": $("#edit-num-volunteers").val(),
-    }
-    print(data);
-  })
 
   $(window).click(function(e) {
     if (e.target.id.slice(0,7) == "topdate") {
@@ -340,6 +399,7 @@ function process_events(raw_events) {
     } else {
       EVENTDICT[bin] = [eventData]
     }
+    EVENTKEYS[eventData.id] = eventData;
   }
 }
 
@@ -351,8 +411,7 @@ function place_event_list(event_list) {
 }
 
 function get_backend_events() {
-  var username = $(".username-button").text();
-  var url = "/1/get_events?username=" + username;
+  var url = "/1/getevents";
   $.ajax({
     type: 'GET',
     url: url,
@@ -363,6 +422,7 @@ function get_backend_events() {
       var stringsunday = (sunday.month()+1).toString() + "/" + sunday.date().toString();
       var currevents = EVENTDICT[stringsunday];
       place_event_list(currevents);
+      print(EVENTKEYS);
     },
     error: function(a , b, c){
     },
@@ -376,6 +436,7 @@ $(document).ready(function() {
   click_handlers();
   load_days();
   $(".body-calender").scrollTo(300);
+  get_backend_events();
 
   $( window ).resize(function() {
     resize_heights();

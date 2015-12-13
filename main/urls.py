@@ -10,4 +10,6 @@ urlpatterns = [
     url(r'^calendar$', CalendarView.as_view()),
     url(r'^login$', LoginView.as_view()),
     url(r'^createevent$', CreateEventView.as_view()),
+    url(r'^1/addevent$', AddEventView.as_view()),
+    url(r'^1/getevents$', GetEventsView.as_view()),
 ]
