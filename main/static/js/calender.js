@@ -100,6 +100,11 @@ function place_event(event) {
     }
   } else {
     eventdiv.text(event.name);
+    var locationDiv = $(document.createElement("div"));
+    locationDiv.addClass("eventTimeText")
+    locationDiv.text(event.location);
+    eventdiv.append(locationDiv);
+
     var time = event.start_date.time;
     var timeDiv = $(document.createElement("div"));
     timeDiv.addClass("eventTimeText");
@@ -167,11 +172,12 @@ function load_edit_event(id) {
   $("#edit-start-time").timepicker({defaultTime: data["start_date"]["time"], template:false, showInputs:false, minuteStep: 15});
   $("#edit-end-time").timepicker({defaultTime: data["end_date"]["time"], template:false, showInputs:false, minuteStep: 15});
   $("#edit-event-type").val(data.event_type);
+  $("#volunteer-area").text(data.attendees)
   editInputChangleHandler();
   // $("#edit-reminder-time").val("");
   // $("#edit-repeat-interval").val("");
   // $("#edit-end-repeat").val("");
-  // $("#edit-num-volunteers").val("");
+  $("#edit-num-volunteers").val(data.num_volunteers_needed);
 }
 
 function getCookie(name) {
@@ -204,7 +210,7 @@ function editEventClickHandler() {
       "reminder_time": $("#edit-reminder-time").val(),
       "repeat_interval": $("#edit-repeat-interval").val(),
       "end_repeat": $("#edit-end-repeat").val(),
-      "num_vols": $("#edit-num-volunteers").val(),
+      "num_volunteers_needed": $("#edit-num-volunteers").val(),
       "id": CURR_EDIT
     }
     var csrftoken = getCookie('csrftoken');
@@ -360,6 +366,36 @@ function click_handlers() {
       },
       async: true
     });
+  });
+
+  $("#show-all-button").click(function() {
+    var date = get_short_date(get_x_days_away(WEEKDIFF * 7));
+    $(".calender-event").remove();
+    place_event_list(EVENTDICT[date]);
+  });
+
+  $(".show-type-btn").click(function() {
+    console.log("wooo");
+    var date = get_short_date(get_x_days_away(WEEKDIFF * 7));
+    $(".calender-event").remove();
+    var events = EVENTDICT[date];
+    var type = $(this).attr("data-type");
+    for (var i = 0; i < events.length; i++) {
+      if (events[i].event_type == type) {
+        place_event(events[i]);
+      }
+    }
+  })
+
+  $("select").change(function() {
+    event_data = EVENTKEYS[CURR_EDIT];
+    if ($(this).attr("date-field") == "event_type")
+      event_data.event_type = $(this).val();
+  });
+
+  $("textarea").change(function() {
+    event_data = EVENTKEYS[CURR_EDIT];
+    event_data.description = $(this).val();
   })
 
   $(".body-stuff").on("click", ".calender-event", function(e) {

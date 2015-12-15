@@ -10,8 +10,28 @@ button:focus {
   color: black;
 }
 
+.white-text {
+  color: white;
+}
+
+.blue-text {
+  color: #0f6bd2;
+}
+
+.grey-text {
+  color: #808080;
+}
+
 .center-text {
   text-align: center;
+}
+
+.bold-text {
+  font-weight: 800;
+}
+
+.thin-text {
+  font-weight: 100;
 }
 
 .sidebar-brand {

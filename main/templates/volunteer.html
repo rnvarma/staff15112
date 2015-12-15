@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block css %}
+  <link href="{% static 'css/volunteer.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+
+  <div class="row">
+    {% for event in events %}
+      <div class="col-md-4 col-lg-3, col-sm-6 col-xs-12">
+        <div class="event-area">
+          <div class="event-name">
+            {{ event.name }} <span class="badge num-volunteers-badge">{{ event.num_volunteers_needed }}</span>
+          </div>
+          <div class="event-information">
+            <div class="event-location">
+              <div class="row">
+                <div class="col-md-4">
+                  <span class="grey-text">Location</span>
+                </div>
+                <div class="col-md-8">
+                  <span class="bold-text">{{ event.location }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="event-time">
+              <div class="row">
+                <div class="col-md-4">
+                  <span class="grey-text">Date</span>
+                </div>
+                <div class="col-md-8">
+                  <span class="bold-text">{{ event.start_date.day }} {{ event.start_date.date }}, {{ event.start_date.year }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="event-time">
+              <div class="row">
+                <div class="col-md-4">
+                  <span class="grey-text">Time</span>
+                </div>
+                <div class="col-md-8">
+                  <span class="bold-text">{{ event.start_date.time }} - {{ event.end_date.time }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="event-description">
+              {{ event.description }}
+            </div>
+            <div class="event-location">
+              <div class="row">
+                <div class="col-md-4">
+                  <span class="grey-text">Volunteers:</span>
+                </div>
+                <div class="col-md-8">
+                  {% if event.attendees %}
+                    <span class="bold-text">{% for name in event.attendees %}{{ name }} {% endfor %}</span>
+                  {% else %}
+                    <span class="bold-text">None</span>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+            {% if event.is_volunteering == False %}
+              <form action="/volunteerevent" method="POST" style="margin-bottom:0px;">
+                {% csrf_token %}
+                <input type="hidden" name="event_id" value="{{ event.id }}">
+                <button style="margin-top: 20px;" class="form-control btn">Volunteer!</button>
+              </form>
+            {% else %}
+              <button style="margin-top: 20px;" class="form-control btn disabled">Thanks for Volunteering</button>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+{% endblock %}

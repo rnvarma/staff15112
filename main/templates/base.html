@@ -34,7 +34,7 @@
                     <a href="#">Swapping</a>
                 </li>
                 <li>
-                    <a href="#">Volunteering</a>
+                    <a href="/volunteering">Volunteering</a>
                 </li>
                 <li>
                     <a href="#">About</a>
@@ -65,7 +65,7 @@
                   </div>
                   <div class="select-area">
                     Type:
-                    <select id="edit-event-type" class="select-item form-control">
+                    <select id="edit-event-type" class="select-item form-control" data-field="event_type">
                       <option value="Office Hours">Office Hours</option>
                       <option value="Small Group">Small Group</option>
                       <option value="Review Session">Review Session</option>
@@ -98,7 +98,10 @@
                   </div>
                   <div class="volunteer-area">
                     Volunteers:
-                    <input placeholder="0, 1, 2, etc.." id="edit-num-volunteers" type="number">
+                    <input placeholder="0, 1, 2, etc.." id="edit-num-volunteers" data-field="num_volunteers_needed" type="number">
+                  </div>
+                  <div class="volunteer-area">
+                    Attending: <span id="volunteer-area"></span>
                   </div>
                   <button style="margin-top: 10px;" id="delete-event-button" class="form-control btn btn-danger">Delete Event</button>
                   <button style="margin-top: 10px;" id="edit-event-button" class="form-control btn btn-primary">Save</button>
@@ -116,9 +119,6 @@
               <div class="leftnav-header">
                 {{ user.first_name }} {{ user.last_name }}
               </div>
-              <a href="/createevent"><div class="leftnav-header">
-                Create Event
-              </div></a>
             </div>
             <div class="fullscreen">
               {% block fullscreen %}{% endblock %}
