@@ -48,20 +48,20 @@
                 <div class="edit-event" style="display:none;">
                   <div class="center-text" style="font-size:125%;">Edit Event</div>
                   <div class="edit-event-area">
-                    <input placeholder="Event Name" id="edit-name" type="text">
+                    <input placeholder="Event Name" data-field="name" id="edit-name" type="text">
                   </div>
                   <div class="edit-event-area">
-                    <input placeholder="Location" id="edit-location" type="text">
+                    <input placeholder="Location" data-field="location" id="edit-location" type="text">
                   </div>
                   <div class="edit-event-area">
-                    <textarea placeholder="Description.." id="edit-description" type="text"></textarea>
+                    <textarea placeholder="Description.." data-field="description" id="edit-description" type="text"></textarea>
                   </div>
                   <div class="edit-event-area">
                     <input id="edit-date" class="span2" data-date-format="mm/dd/yyyy" data-date="12-12-2015" size="16" type="text" placeholder="Event Date" readonly="">
                   </div>
                   <div class="time-area">
-                    <span class="black-text">From</span> <input id="edit-start-time" placeholder="Start Time" type="text" class="input-small">
-                    <span class="black-text">To</span> <input id="edit-end-time" placeholder="End Time" type="text" class="input-small">
+                    <span class="black-text">From</span> <input data-field="start_time" id="edit-start-time" placeholder="Start Time" type="text" class="input-small">
+                    <span class="black-text">To</span> <input data-field="end_time" id="edit-end-time" placeholder="End Time" type="text" class="input-small">
                   </div>
                   <div class="select-area">
                     Type:
@@ -100,6 +100,7 @@
                     Volunteers:
                     <input placeholder="0, 1, 2, etc.." id="edit-num-volunteers" type="number">
                   </div>
+                  <button style="margin-top: 10px;" id="delete-event-button" class="form-control btn btn-danger">Delete Event</button>
                   <button style="margin-top: 10px;" id="edit-event-button" class="form-control btn btn-primary">Save</button>
                 </div>
             </ul>
@@ -150,8 +151,8 @@
 
       $("#edit-date").datepicker();
       $("#edit-end-repeat").datepicker();
-      $("#edit-start-time").timepicker({template:false, showInputs:false, minuteStep: 15});
-      $("#edit-end-time").timepicker({template:false, showInputs:false, minuteStep: 15});
+      $("#edit-start-time").timepicker({defaultTime:false, template:false, showInputs:false, minuteStep: 15});
+      $("#edit-end-time").timepicker({defaultTime:false, template:false, showInputs:false, minuteStep: 15});
     </script>
     {% block js %}{% endblock %}
   </body>

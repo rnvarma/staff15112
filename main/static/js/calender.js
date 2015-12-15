@@ -3,6 +3,8 @@ WEEKDIFF = 0;
 HOURSIZE = 50;
 CAL_SIZE = 24 * HOURSIZE;
 
+CURR_EDIT = null;
+
 EVENTDICT = {};
 EVENTKEYS = {};
 
@@ -16,30 +18,6 @@ IMG_DICT = {
 
 function print(x) {
   console.log(x);
-}
-
-function load_spinner() {
-  var opts = {
-    lines: 13, // The number of lines to draw
-    length: 20, // The length of each line
-    width: 10, // The line thickness
-    radius: 30, // The radius of the inner circle
-    corners: 1, // Corner roundness (0..1)
-    rotate: 0, // The rotation offset
-    direction: 1, // 1: clockwise, -1: counterclockwise
-    color: '#000', // #rgb or #rrggbb or array of colors
-    speed: 1, // Rounds per second
-    trail: 60, // Afterglow percentage
-    shadow: false, // Whether to render a shadow
-    hwaccel: false, // Whether to use hardware acceleration
-    className: 'spinner', // The CSS class to assign to the spinner
-    zIndex: 2e9, // The z-index (defaults to 2000000000)
-    top: '50%', // Top position relative to parent
-    left: '50%' // Left position relative to parent
-  };
-  $(".shaded-region-loading").show();
-  var target = document.getElementsByClassName("higher-level-div")[0]
-  var spinner = new Spinner(opts).spin(target);
 }
 
 function formatted_time(mil_num) {
@@ -59,8 +37,12 @@ function get_icon_div(name) {
 }
 
 function getTime(h, m) {
-  if (h < 12) ampm = "AM";
-  else ampm = "PM";
+  if (h < 12){
+    ampm = "AM";
+  } else {
+    ampm = "PM";
+    if (h > 12) h = h % 12;
+  }
   if (m == 0) {
     return h + " " + ampm;
   } else {
@@ -153,31 +135,39 @@ function resize_heights() {
   place_event_list(EVENTDICT[date]);
 }
 
+function reset_time_inputs() {
+  $(".time-area").replaceWith(
+    '<div class="time-area">' + 
+      '<span class="black-text">From</span> <input data-field="start_time" id="edit-start-time" placeholder="Start Time" type="text" class="input-small">' +
+      '<span class="black-text">To</span> <input data-field="end_time" id="edit-end-time" placeholder="End Time" type="text" class="input-small">' +
+    '</div>');
+}
+
 function clear_edit_event() {
   $("#edit-name").val("");
   $("#edit-location").val("");
   $("#edit-description").val("");
   $("#edit-date").val("");
-  $("#edit-start-time").val("");
-  $("#edit-end-time").val("");
   $("#edit-event-type").val("");
   $("#edit-reminder-time").val("");
   $("#edit-repeat-interval").val("");
   $("#edit-end-repeat").val("");
   $("#edit-num-volunteers").val("");
+  reset_time_inputs();
 }
 
 function load_edit_event(id) {
-  clear_edit_event()
   var data = EVENTKEYS[id];
   var date = data["start_date"]["month"] + "/" + data["start_date"]["date"] + "/" + data["start_date"]["year"];
+  clear_edit_event()
   $("#edit-name").val(data.name);
   $("#edit-location").val(data.location);
   $("#edit-description").val(data.description);
   $("#edit-date").val(date);
-  $("#edit-start-time").val(data["start_date"]["time"]);
-  $("#edit-end-time").val(data["end_date"]["time"]);
+  $("#edit-start-time").timepicker({defaultTime: data["start_date"]["time"], template:false, showInputs:false, minuteStep: 15});
+  $("#edit-end-time").timepicker({defaultTime: data["end_date"]["time"], template:false, showInputs:false, minuteStep: 15});
   $("#edit-event-type").val(data.event_type);
+  editInputChangleHandler();
   // $("#edit-reminder-time").val("");
   // $("#edit-repeat-interval").val("");
   // $("#edit-end-repeat").val("");
@@ -202,21 +192,74 @@ function getCookie(name) {
 
 function editEventClickHandler() {
   $("#edit-event-button").click(function() {
+    var event_data = EVENTKEYS[CURR_EDIT];
     var data = {
       "name": $("#edit-name").val(),
       "location": $("#edit-location").val(),
       "description": $("#edit-description").val(),
       "date": $("#edit-date").val(),
-      "start_time": $("#edit-start-time").val(),
-      "end_time": $("#edit-end-time").val(),
+      "start_date": event_data["start_date"]["full"],
+      "end_date": event_data["end_date"]["full"],
       "event_type": $("#edit-event-type").val(),
       "reminder_time": $("#edit-reminder-time").val(),
       "repeat_interval": $("#edit-repeat-interval").val(),
       "end_repeat": $("#edit-end-repeat").val(),
       "num_vols": $("#edit-num-volunteers").val(),
+      "id": CURR_EDIT
     }
-    print(data);
+    var csrftoken = getCookie('csrftoken');
+    $.ajax({
+      type: 'POST',
+      url: '/1/editevent',
+      data: JSON.stringify(data),
+      beforeSend: function (xhr) {
+        xhr.withCredentials = true;
+        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+      },
+      success: function (event_data) {},
+      error: function(a , b, c){},
+      async: true
+    });
   })
+}
+
+function editInputChangleHandler() {
+  function get_hour_minute(s) {
+    hour = parseInt(s.substring(0, s.indexOf(":")))
+    minute = parseInt(s.substring(s.indexOf(":") + 1, s.indexOf(" ")));
+    timeday = s.substring(s.indexOf(" ") + 1, s.length);
+    if (timeday == "PM" && hour != 12) {
+      hour = hour + 12
+    } else if (timeday == "AM" && hour == 12) {
+      hour = 0
+    }
+    return [hour, minute]
+  }
+  $("input").change(function() {
+    var field = $(this).attr("data-field");
+    var new_val = $(this).val();
+    var event_data = EVENTKEYS[CURR_EDIT];
+    if (field.indexOf("time") < 0)  { 
+      event_data[field] = new_val;
+    } else {
+      time = get_hour_minute(new_val);
+      if (field == "start_time") {
+        var old_time = event_data["start_date"]["full"]
+        old_time = moment(old_time);
+        old_time.set('hour', time[0]);
+        old_time.set('minute', time[1]);
+        event_data["start_date"] = get_date_data(old_time)
+      } else {
+        var old_time = event_data["end_date"]["full"]
+        old_time = moment(old_time);
+        old_time.set('hour', time[0]);
+        old_time.set('minute', time[1]);
+        event_data["end_date"] = get_date_data(old_time)
+      }
+    }
+    $('.calender-event[data-id="' + CURR_EDIT + '"]').remove()
+    place_event(event_data);
+  });
 }
 
 function click_handlers() {
@@ -260,6 +303,7 @@ function click_handlers() {
     date.minute(nearest_30);
     var new_event = get_new_event(date);
     var data = new_event;
+    console.log(data);
     var csrftoken = getCookie('csrftoken');
     $.ajax({
       type: 'POST',
@@ -287,6 +331,37 @@ function click_handlers() {
 
   editEventClickHandler();
 
+  $("#delete-event-button").click(function() {
+    data = {id: CURR_EDIT}
+    var csrftoken = getCookie('csrftoken');
+    $.ajax({
+      type: 'POST',
+      url: '/1/deleteevent',
+      data: JSON.stringify(data),
+      beforeSend: function (xhr) {
+        xhr.withCredentials = true;
+        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+      },
+      success: function (event_data) {
+        $('.calender-event[data-id="' + CURR_EDIT + '"]').remove()
+        delete EVENTKEYS[CURR_EDIT]
+        var date = get_short_date(get_x_days_away(WEEKDIFF * 7));
+        var events = EVENTDICT[date]
+        for (var i = 0; i < events.length; i++) {
+          event = events[i]
+          if (event.id == parseInt(CURR_EDIT)) {
+            print("got here wooo");
+            events.splice(events.indexOf(event), 1);
+            return;
+          }
+        }
+      },
+      error: function(a , b, c){
+      },
+      async: true
+    });
+  })
+
   $(".body-stuff").on("click", ".calender-event", function(e) {
     e.stopPropagation();
     if ($("#wrapper").hasClass("toggled")) {
@@ -294,12 +369,12 @@ function click_handlers() {
       $("#menu-toggle").find(".arrow").addClass("glyphicon-chevron-left").removeClass("glyphicon-chevron-right")
       setTimeout(function() {
         resize_heights();
-        clicked.addClass("clickedEvent");
       }, 1000);
     } else {
       $(".clickedEvent").removeClass("clickedEvent");
       $(this).addClass("clickedEvent");
       var id = $(this).attr("data-id");
+      CURR_EDIT = id;
       load_edit_event(id);
       $(".edit-event").show();
     }
@@ -422,7 +497,6 @@ function get_backend_events() {
       var stringsunday = (sunday.month()+1).toString() + "/" + sunday.date().toString();
       var currevents = EVENTDICT[stringsunday];
       place_event_list(currevents);
-      print(EVENTKEYS);
     },
     error: function(a , b, c){
     },

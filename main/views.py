@@ -84,7 +84,7 @@ def get_event_data(event):
   (yr, m , d, h, minute) = getDateStats(str(st))
   startT = h + float(minute)/60
   start_data = {
-      "full": et,
+      "full": st,
       "scaledT": startT,
       "year": yr,
       "month": m,
@@ -121,6 +121,25 @@ class AddEventView(View):
     new_event = Event.objects.get(id=id)
     data = get_event_data(new_event)
     return JsonResponse(data)
+
+class EditEventView(View):
+  def post(self, request):
+    data = json.loads(dict(request.POST).keys()[0])
+    event = Event.objects.get(id=int(data["id"]))
+    event.name = data["name"]
+    event.location = data["location"]
+    event.description = data["description"]
+    event.start_date = data["start_date"]
+    event.end_date = data["end_date"]
+    event.save()
+    return JsonResponse({})
+
+class DeleteEventView(View):
+  def post(self, request):
+    data = json.loads(dict(request.POST).keys()[0])
+    event = Event.objects.get(id=int(data["id"]))
+    event.delete()
+    return JsonResponse({})
 
 class GetEventsView(APIView):
   def get(self, request):
