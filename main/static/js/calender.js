@@ -134,7 +134,11 @@ function resize_heights() {
   $(".verticalcol").css("margin-top", -CAL_SIZE);
   $(".verticalcol").each(function(i) {
     $(this).css("margin-left", col_width * i);
-  })
+  });
+
+  var rightnow = moment(Date())
+  var scaledT = rightnow.hour() + (rightnow.minute()/60);
+  $(".currtime-line").css("margin-top", -(CAL_SIZE - scaledT * HOURSIZE));
   var date = get_short_date(get_x_days_away(WEEKDIFF * 7));
   $(".calender-event").remove();
   place_event_list(EVENTDICT[date]);
